@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Tenant E-commerce Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+            min-height: 100vh;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: white;
+            font-size: 32px;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .stores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .store-card {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .store-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        .store-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: white;
+            font-size: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .store-logo::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .techhub-logo {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+        }
+
+        .homestyle-logo {
+            background: linear-gradient(135deg, #059669, #10b981);
+        }
+
+        .sportspro-logo {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+        }
+
+        .store-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .store-description {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .store-features {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .store-feature {
+            background: var(--bg-secondary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .cta-button {
+            background: var(--primary-color);
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            margin: 8px;
+        }
+
+        .cta-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .cta-button.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--border-color);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .tech-button {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+        }
+
+        .tech-button:hover {
+            background: linear-gradient(135deg, #1e40af, #2563eb);
+        }
+
+        .home-button {
+            background: linear-gradient(135deg, #059669, #10b981);
+        }
+
+        .home-button:hover {
+            background: linear-gradient(135deg, #047857, #059669);
+        }
+
+        .sports-button {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+        }
+
+        .sports-button:hover {
+            background: linear-gradient(135deg, #b91c1c, #dc2626);
+        }
+
+        .demo-section {
+            background: var(--bg-primary);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .demo-item {
+            background: var(--bg-secondary);
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .demo-icon {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+        }
+
+        .demo-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .demo-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: var(--accent-color);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #374151;
+            color: #9ca3af;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .features-grid,
+            .stores-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="fade-in">Multi-Tenant E-commerce Platform</h1>
+            <p class="fade-in delay-1">Run multiple online stores from a single powerful backend infrastructure, similar to digitec-galaxus</p>
+            <div class="fade-in delay-2">
+                <a href="#stores" class="cta-button">
+                    <i class="fas fa-rocket"></i>
+                    Explore Stores
+                </a>
+                <a href="frontend/admin/" class="cta-button secondary">
+                    <i class="fas fa-cog"></i>
+                    Admin Dashboard
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Platform Features</h2>
+                <p class="section-subtitle">Everything you need to run a successful multi-store e-commerce operation</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card fade-in delay-1">
+                    <div class="feature-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="feature-title">Multi-Store Architecture</h3>
+                    <p class="feature-description">Run multiple storefronts from a single backend with complete tenant isolation and shared infrastructure.</p>
+                </div>
+
+                <div class="feature-card fade-in delay-2">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3 class="feature-title">Custom Branding</h3>
+                    <p class="feature-description">Each store can have unique themes, colors, logos, and domain configurations for distinct brand identities.</p>
+                </div>
+
+                <div class="feature-card fade-in delay-3">
+                    <div class="feature-icon">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <h3 class="feature-title">Product Management</h3>
+                    <p class="feature-description">Complete product catalog system with categories, variants, inventory tracking, and image management.</p>
+                </div>
+
+                <div class="feature-card fade-in delay-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3 class="feature-title">Shopping Experience</h3>
+                    <p class="feature-description">Full shopping cart functionality, user authentication, order processing, and payment integration ready.</p>
+                </div>
+
+                <div class="feature-card fade-in delay-1">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Security & Performance</h3>
+                    <p class="feature-description">JWT authentication, rate limiting, input validation, and optimized database queries for secure, fast operations.</p>
+                </div>
+
+                <div class="feature-card fade-in delay-2">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Scalable Architecture</h3>
+                    <p class="feature-description">Built for growth with horizontal scaling, caching support, and cloud-ready deployment configurations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stores Section -->
+    <section class="section" id="stores">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Live Storefront Examples</h2>
+                <p class="section-subtitle">Experience three distinct stores with unique branding and product focus</p>
+            </div>
+
+            <div class="stores-grid">
+                <div class="store-card fade-in delay-1">
+                    <div class="store-logo techhub-logo">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3 class="store-title">TechHub</h3>
+                    <p class="store-description">Premium electronics and technology products with a modern, tech-focused design featuring blue color schemes and cutting-edge product presentations.</p>
+                    <div class="store-features">
+                        <span class="store-feature">Electronics</span>
+                        <span class="store-feature">Gadgets</span>
+                        <span class="store-feature">Tech Gear</span>
+                        <span class="store-feature">Modern Design</span>
+                    </div>
+                    <div>
+                        <a href="frontend/techhub/" class="cta-button tech-button">
+                            <i class="fas fa-external-link-alt"></i>
+                            Visit TechHub
+                        </a>
+                    </div>
+                </div>
+
+                <div class="store-card fade-in delay-2">
+                    <div class="store-logo homestyle-logo">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3 class="store-title">HomeStyle</h3>
+                    <p class="store-description">Elegant home and lifestyle products with sophisticated green theming, inspiration sections, and premium product presentations for modern living.</p>
+                    <div class="store-features">
+                        <span class="store-feature">Furniture</span>
+                        <span class="store-feature">Decor</span>
+                        <span class="store-feature">Lifestyle</span>
+                        <span class="store-feature">Elegant Design</span>
+                    </div>
+                    <div>
+                        <a href="frontend/homestyle/" class="cta-button home-button">
+                            <i class="fas fa-external-link-alt"></i>
+                            Visit HomeStyle
+                        </a>
+                    </div>
+                </div>
+
+                <div class="store-card fade-in delay-3">
+                    <div class="store-logo sportspro-logo">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <h3 class="store-title">SportsPro</h3>
+                    <p class="store-description">Dynamic sports equipment and fitness gear store with energetic red branding, designed for athletic performance and outdoor adventure enthusiasts.</p>
+                    <div class="store-features">
+                        <span class="store-feature">Sports Gear</span>
+                        <span class="store-feature">Fitness</span>
+                        <span class="store-feature">Outdoor</span>
+                        <span class="store-feature">Dynamic Design</span>
+                    </div>
+                    <div>
+                        <a href="#" class="cta-button sports-button" onclick="alert('SportsPro store template ready for customization!')">
+                            <i class="fas fa-tools"></i>
+                            Customize Store
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="section">
+        <div class="container">
+            <div class="demo-section fade-in">
+                <div class="section-header">
+                    <h2 class="section-title">System Capabilities</h2>
+                    <p class="section-subtitle">Explore the comprehensive e-commerce functionality built into the platform</p>
+                </div>
+
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <div class="demo-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h4 class="demo-title">User Authentication</h4>
+                        <p class="demo-description">Registration, login, profile management with JWT security</p>
+                    </div>
+
+                    <div class="demo-item">
+                        <div class="demo-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h4 class="demo-title">Product Search</h4>
+                        <p class="demo-description">Advanced search and filtering across all product catalogs</p>
+                    </div>
+
+                    <div class="demo-item">
+                        <div class="demo-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <h4 class="demo-title">Shopping Cart</h4>
+                        <p class="demo-description">Persistent cart for users and guests with quantity management</p>
+                    </div>
+
+                    <div class="demo-item">
+                        <div class="demo-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <h4 class="demo-title">Order Processing</h4>
+                        <p class="demo-description">Complete order lifecycle with payment integration ready</p>
+                    </div>
+
+                    <div class="demo-item">
+                        <div class="demo-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h4 class="demo-title">Admin Dashboard</h4>
+                        <p class="demo-description">Store management, analytics, and system administration</p>
+                    </div>
+
+                    <div class="demo-item">
+                        <div class="demo-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4 class="demo-title">Responsive Design</h4>
+                        <p class="demo-description">Mobile-first design optimized for all device sizes</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="frontend/admin/" class="cta-button">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Access Admin Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Section -->
+    <section class="section" style="background: var(--bg-primary);">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Technical Architecture</h2>
+                <p class="section-subtitle">Built with modern technologies and best practices for scalability and performance</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card fade-in delay-1">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #16a34a, #22c55e);">
+                        <i class="fab fa-node-js"></i>
+                    </div>
+                    <h3 class="feature-title">Node.js Backend</h3>
+                    <p class="feature-description">Express.js server with RESTful API architecture, middleware integration, and comprehensive error handling.</p>
+                </div>
+
+                <div class="feature-card fade-in delay-2">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #0f766e, #14b8a6);">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="feature-title">PostgreSQL Database</h3>
+                    <p class="feature-description">Optimized multi-tenant schema with proper indexing, relationships, and data integrity constraints.</p>
+                </div>
+
+                <div class="feature-card fade-in delay-3">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #7c3aed, #a855f7);">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="feature-title">Security First</h3>
+                    <p class="feature-description">JWT authentication, input validation, rate limiting, and comprehensive security headers protection.</p>
+                </div>
+
+                <div class="feature-card fade-in delay-4">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #ea580c, #f97316);">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="feature-title">Performance Optimized</h3>
+                    <p class="feature-description">Database query optimization, connection pooling, response compression, and caching ready architecture.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Multi-Tenant E-commerce</h3>
+                    <p>A sophisticated platform for running multiple online stores from a single backend infrastructure, built with modern technologies and best practices.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Documentation</h3>
+                    <ul>
+                        <li><a href="README.md">System Documentation</a></li>
+                        <li><a href="SYSTEM_OVERVIEW.md">Technical Overview</a></li>
+                        <li><a href="database-schema.sql">Database Schema</a></li>
+                        <li><a href="package.json">Dependencies</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Start</h3>
+                    <ul>
+                        <li><a href="#" onclick="alert('Run ./deploy.sh to setup the system')">Installation Guide</a></li>
+                        <li><a href="#" onclick="alert('Use ./start.sh to start the server')">Start Server</a></li>
+                        <li><a href="#" onclick="alert('Edit .env file for configuration')">Configuration</a></li>
+                        <li><a href="#" onclick="alert('API runs on port 5000')">API Documentation</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#" onclick="alert('Check README.md for detailed instructions')">Setup Guide</a></li>
+                        <li><a href="#" onclick="alert('Review SYSTEM_OVERVIEW.md for architecture details')">Architecture</a></li>
+                        <li><a href="#" onclick="alert('Check package.json for available scripts')">Scripts</a></li>
+                        <li><a href="#" onclick="alert('System ready for production deployment')">Deployment</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Multi-Tenant E-commerce Platform. Built with ❤️ for modern e-commerce success.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add click handlers for demo alerts
+            document.querySelectorAll('[onclick*="alert"]').forEach(element => {
+                element.style.cursor = 'pointer';
+            });
+
+            // Add loading animation for external links
+            document.querySelectorAll('a[href^="frontend/"]').forEach(link => {
+                link.addEventListener('click', function() {
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                });
+            });
+        });
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
