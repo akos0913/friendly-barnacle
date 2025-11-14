@@ -74,7 +74,7 @@ class UserController {
           postal_code, country, phone,
           is_default_shipping, is_default_billing
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-        RETURNing *
+        RETURNING *
       `;
 
       const values = [

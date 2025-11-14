@@ -85,7 +85,7 @@ class CategoryController {
       const query = `
         INSERT INTO categories (store_id, name, slug, description, parent_id, image_url, sort_order)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
-        RETURNing *
+        RETURNING *
       `;
 
       const values = [

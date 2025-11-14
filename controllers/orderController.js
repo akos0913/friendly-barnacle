@@ -211,7 +211,7 @@ class OrderController {
           shipping_amount, discount_amount, total_amount, currency,
           shipping_address, billing_address, notes
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-        RETURNing *
+        RETURNING *
       `;
 
       const orderValues = [
@@ -257,7 +257,7 @@ class OrderController {
         INSERT INTO payment_transactions (
           order_id, payment_method, amount, currency, status
         ) VALUES ($1, $2, $3, $4, $5)
-        RETURNing *
+        RETURNING *
       `;
 
       const paymentResult = await client.query(paymentQuery, [
