@@ -120,6 +120,9 @@ CREATE DATABASE ecommerce_multi;
 # Create user (recommended for security)
 CREATE USER ecommerce_user WITH PASSWORD 'your_secure_password_here';
 GRANT ALL PRIVILEGES ON DATABASE ecommerce_multi TO ecommerce_user;
+GRANT ALL ON SCHEMA public TO ecommerce_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO ecommerce_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO ecommerce_user;
 
 # Exit PostgreSQL
 \q

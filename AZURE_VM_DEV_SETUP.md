@@ -55,6 +55,9 @@ sudo -u postgres psql <<'SQL'
 CREATE DATABASE ecommerce_multi;
 CREATE USER ecommerce_user WITH PASSWORD 'change_me';
 GRANT ALL PRIVILEGES ON DATABASE ecommerce_multi TO ecommerce_user;
+GRANT ALL ON SCHEMA public TO ecommerce_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO ecommerce_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO ecommerce_user;
 SQL
 ```
 

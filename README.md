@@ -73,11 +73,18 @@ server.js                 # Main application entry point
 
 3. **Set up database**
    ```bash
-   # Create PostgreSQL database
-   createdb ecommerce_multi
-   
-   # Run database schema
-   psql -d ecommerce_multi -f database-schema.sql
+   # (Recommended) Create dedicated PostgreSQL role and database
+   sudo -u postgres psql <<'SQL'
+   CREATE ROLE ecommerce_user WITH LOGIN PASSWORD 'change_me';
+   CREATE DATABASE ecommerce_multi OWNER ecommerce_user;
+   GRANT ALL PRIVILEGES ON DATABASE ecommerce_multi TO ecommerce_user;
+   GRANT ALL ON SCHEMA public TO ecommerce_user;
+   ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO ecommerce_user;
+   ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO ecommerce_user;
+   SQL
+
+   # Run database schema (as the owning role)
+   PGPASSWORD="change_me" psql -h localhost -U ecommerce_user -d ecommerce_multi -f database-schema.sql
    ```
 
 4. **Configure environment**
