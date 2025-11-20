@@ -84,9 +84,20 @@ CREATE DATABASE ecommerce_multi;
 # Create user (optional, can use postgres user)
 CREATE USER ecommerce_user WITH PASSWORD 'your_secure_password';
 GRANT ALL PRIVILEGES ON DATABASE ecommerce_multi TO ecommerce_user;
+GRANT ALL ON SCHEMA public TO ecommerce_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO ecommerce_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO ecommerce_user;
 
 # Exit PostgreSQL
 \q
+```
+If running `psql` without `-d` fails with `database "<username>" does not exist`, connect directly to the app database instead:
+```bash
+psql -d ecommerce_multi
+```
+If the database is missing, create it first:
+```bash
+createdb ecommerce_multi
 ```
 
 ### Step 7: Configure Environment
