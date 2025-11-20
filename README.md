@@ -197,6 +197,9 @@ npm run dev
 npm start
 ```
 
+### Azure Free VM (Ubuntu) Development Setup
+Folge der detaillierten Schritt-für-Schritt-Anleitung in [AZURE_VM_DEV_SETUP.md](AZURE_VM_DEV_SETUP.md), um die Plattform auf einer Azure Free Tier VM (Ubuntu 20.04/22.04) einzurichten. Die Anleitung deckt VM-Erstellung, PostgreSQL-Setup, Firewall/NSG-Regeln, Umgebungsvariablen (inkl. `HOST=0.0.0.0`) sowie den Start mit PM2 oder im Entwicklungsmodus ab.
+
 ### Docker (Coming Soon)
 ```bash
 docker-compose up
