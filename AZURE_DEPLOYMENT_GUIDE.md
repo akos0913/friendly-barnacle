@@ -158,6 +158,7 @@ DB_PASSWORD=your_secure_password_here
 DB_SSL=false
 
 # Server Configuration
+HOST=0.0.0.0
 PORT=5000
 NODE_ENV=production
 ALLOWED_ORIGINS=http://localhost:3000,http://YOUR_VM_IP_ADDRESS
@@ -186,6 +187,10 @@ REDIS_PORT=6379
 REDIS_PASSWORD=
 REDIS_DB=0
 ```
+
+> 💡 Generate the JWT values with strong randomness (for example `openssl rand -base64 48` for `JWT_SECRET` and `openssl rand -base64 64` for `JWT_REFRESH_SECRET`) and keep them out of version control.
+
+> 💡 **Hinweis:** `HOST=0.0.0.0` stellt sicher, dass Node.js auch über die öffentliche Azure-IP erreichbar ist. Passe `ALLOWED_ORIGINS` so an, dass sie deine öffentliche IP oder Domain enthalten, damit CORS-Anfragen vom Browser erlaubt sind.
 
 ### Step 7: Run Database Schema
 ```bash

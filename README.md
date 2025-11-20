@@ -197,6 +197,9 @@ npm run dev
 npm start
 ```
 
+### Azure Free VM (Ubuntu) Development Setup
+Folge der detaillierten Schritt-für-Schritt-Anleitung in [AZURE_VM_DEV_SETUP.md](AZURE_VM_DEV_SETUP.md), um die Plattform auf einer Azure Free Tier VM (Ubuntu 20.04/22.04) einzurichten. Die Anleitung deckt VM-Erstellung, PostgreSQL-Setup, Firewall/NSG-Regeln, Umgebungsvariablen (inkl. `HOST=0.0.0.0`) sowie den Start mit PM2 oder im Entwicklungsmodus ab.
+
 ### Docker (Coming Soon)
 ```bash
 docker-compose up
@@ -215,6 +218,18 @@ docker-compose up
 | `JWT_SECRET` | JWT secret key | - |
 | `STRIPE_SECRET_KEY` | Stripe payment key | - |
 | `REDIS_HOST` | Redis host | localhost |
+
+### Generating JWT secrets
+
+- `JWT_SECRET` signiert die Access Tokens und `JWT_REFRESH_SECRET` signiert die Refresh Tokens. Beide Werte dürfen **niemals** im Repository liegen und sollten lange, zufällige Strings sein.
+- Erzeuge sie lokal oder direkt auf der VM, z. B. mit OpenSSL:
+
+  ```bash
+  openssl rand -base64 48  # für JWT_SECRET
+  openssl rand -base64 64  # für JWT_REFRESH_SECRET
+  ```
+
+- Trage die generierten Werte in deine `.env` ein und halte sie geheim (kein Commit, keine Logs).
 
 ## Contributing
 
