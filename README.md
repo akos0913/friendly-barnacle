@@ -219,6 +219,18 @@ docker-compose up
 | `STRIPE_SECRET_KEY` | Stripe payment key | - |
 | `REDIS_HOST` | Redis host | localhost |
 
+### Generating JWT secrets
+
+- `JWT_SECRET` signiert die Access Tokens und `JWT_REFRESH_SECRET` signiert die Refresh Tokens. Beide Werte dürfen **niemals** im Repository liegen und sollten lange, zufällige Strings sein.
+- Erzeuge sie lokal oder direkt auf der VM, z. B. mit OpenSSL:
+
+  ```bash
+  openssl rand -base64 48  # für JWT_SECRET
+  openssl rand -base64 64  # für JWT_REFRESH_SECRET
+  ```
+
+- Trage die generierten Werte in deine `.env` ein und halte sie geheim (kein Commit, keine Logs).
+
 ## Contributing
 
 1. Fork the repository

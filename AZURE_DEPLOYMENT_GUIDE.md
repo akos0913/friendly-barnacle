@@ -188,6 +188,8 @@ REDIS_PASSWORD=
 REDIS_DB=0
 ```
 
+> 💡 Generate the JWT values with strong randomness (for example `openssl rand -base64 48` for `JWT_SECRET` and `openssl rand -base64 64` for `JWT_REFRESH_SECRET`) and keep them out of version control.
+
 > 💡 **Hinweis:** `HOST=0.0.0.0` stellt sicher, dass Node.js auch über die öffentliche Azure-IP erreichbar ist. Passe `ALLOWED_ORIGINS` so an, dass sie deine öffentliche IP oder Domain enthalten, damit CORS-Anfragen vom Browser erlaubt sind.
 
 ### Step 7: Run Database Schema
