@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/categoryController');
-const { authenticateToken, requireStoreAdmin } = require('../middleware/auth');
+const { authenticateToken } = require('../middleware/auth');
+const { requireStoreAdmin } = require('../middleware/storeMiddleware');
 
 // Public routes
 router.get('/', categoryController.getCategories);

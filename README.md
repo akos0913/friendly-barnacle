@@ -73,11 +73,28 @@ server.js                 # Main application entry point
 
 3. **Set up database**
    ```bash
-   # Create PostgreSQL database
+   # (Recommended) Create dedicated PostgreSQL role and database
+   sudo -u postgres psql <<'SQL'
+   CREATE ROLE ecommerce_user WITH LOGIN PASSWORD 'change_me';
+   CREATE DATABASE ecommerce_multi OWNER ecommerce_user;
+   GRANT ALL PRIVILEGES ON DATABASE ecommerce_multi TO ecommerce_user;
+   GRANT ALL ON SCHEMA public TO ecommerce_user;
+   ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO ecommerce_user;
+   ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO ecommerce_user;
+   SQL
+
+   # Run database schema (as the owning role)
+   PGPASSWORD="change_me" psql -h localhost -U ecommerce_user -d ecommerce_multi -f database-schema.sql
+   ```
+
+   If you open `psql` without specifying `-d`, it tries to connect to a database named after your OS user (e.g., `ecommerce`).
+   Connect directly to the app database instead:
+   ```bash
+   psql -d ecommerce_multi
+   ```
+   If that database does not exist yet, create it first as shown above or run:
+   ```bash
    createdb ecommerce_multi
-   
-   # Run database schema
-   psql -d ecommerce_multi -f database-schema.sql
    ```
 
 4. **Configure environment**
@@ -197,6 +214,9 @@ npm run dev
 npm start
 ```
 
+### Azure Free VM (Ubuntu) Development Setup
+Folge der detaillierten Schritt-für-Schritt-Anleitung in [AZURE_VM_DEV_SETUP.md](AZURE_VM_DEV_SETUP.md), um die Plattform auf einer Azure Free Tier VM (Ubuntu 20.04/22.04) einzurichten. Die Anleitung deckt VM-Erstellung, PostgreSQL-Setup, Firewall/NSG-Regeln, Umgebungsvariablen (inkl. `HOST=0.0.0.0`) sowie den Start mit PM2 oder im Entwicklungsmodus ab.
+
 ### Docker (Coming Soon)
 ```bash
 docker-compose up
@@ -215,6 +235,18 @@ docker-compose up
 | `JWT_SECRET` | JWT secret key | - |
 | `STRIPE_SECRET_KEY` | Stripe payment key | - |
 | `REDIS_HOST` | Redis host | localhost |
+
+### Generating JWT secrets
+
+- `JWT_SECRET` signiert die Access Tokens und `JWT_REFRESH_SECRET` signiert die Refresh Tokens. Beide Werte dürfen **niemals** im Repository liegen und sollten lange, zufällige Strings sein.
+- Erzeuge sie lokal oder direkt auf der VM, z. B. mit OpenSSL:
+
+  ```bash
+  openssl rand -base64 48  # für JWT_SECRET
+  openssl rand -base64 64  # für JWT_REFRESH_SECRET
+  ```
+
+- Trage die generierten Werte in deine `.env` ein und halte sie geheim (kein Commit, keine Logs).
 
 ## Contributing
 
