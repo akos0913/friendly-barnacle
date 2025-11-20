@@ -87,6 +87,16 @@ server.js                 # Main application entry point
    PGPASSWORD="change_me" psql -h localhost -U ecommerce_user -d ecommerce_multi -f database-schema.sql
    ```
 
+   If you open `psql` without specifying `-d`, it tries to connect to a database named after your OS user (e.g., `ecommerce`).
+   Connect directly to the app database instead:
+   ```bash
+   psql -d ecommerce_multi
+   ```
+   If that database does not exist yet, create it first as shown above or run:
+   ```bash
+   createdb ecommerce_multi
+   ```
+
 4. **Configure environment**
    ```bash
    cp .env.example .env

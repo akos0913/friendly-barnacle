@@ -203,6 +203,14 @@ sudo -u postgres psql -d ecommerce_multi -f database-schema.sql
 # If using custom user:
 # PGPASSWORD="your_secure_password_here" psql -h localhost -U ecommerce_user -d ecommerce_multi -f database-schema.sql
 ```
+If you see `database "<username>" does not exist` when launching `psql` without `-d`, connect directly to the app database:
+```bash
+psql -d ecommerce_multi
+```
+Create it first if needed:
+```bash
+createdb ecommerce_multi
+```
 
 ### Step 8: Create Directories
 ```bash

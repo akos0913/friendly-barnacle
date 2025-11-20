@@ -88,6 +88,15 @@ Wichtige Werte für die Azure-VM:
 PGPASSWORD="change_me" psql -h localhost -U ecommerce_user -d ecommerce_multi -f database-schema.sql
 ```
 
+Falls ein Aufruf von `psql` ohne `-d` mit `database "ecommerce" does not exist` scheitert, verbinde dich explizit mit der App-Datenbank:
+```bash
+psql -d ecommerce_multi
+```
+Oder lege sie (falls noch nicht vorhanden) an:
+```bash
+createdb ecommerce_multi
+```
+
 ## 10) Anwendung starten
 ```bash
 # Entwicklungsmodus (Frontend-Assets lokal ausliefern)

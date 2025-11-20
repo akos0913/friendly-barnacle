@@ -91,6 +91,14 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO ecommerce_us
 # Exit PostgreSQL
 \q
 ```
+If running `psql` without `-d` fails with `database "<username>" does not exist`, connect directly to the app database instead:
+```bash
+psql -d ecommerce_multi
+```
+If the database is missing, create it first:
+```bash
+createdb ecommerce_multi
+```
 
 ### Step 7: Configure Environment
 ```bash
